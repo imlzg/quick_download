@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="quick" default="default" basedir=".">
+
+    <property name="name" value="quick"/>
+    <property name="dir.src" value="src"/>
+    <property name="dir.out" value="../out/production/${name}"/>
+    <property name="dir.lib" value=""/>
+    <property name="dir.dist" value="/home/george/develop/dist/roy/"/>
+    <property name="file.jar" value="${dir.dist}/${name}.jar"/>
+
+    <!--
+    <property name="log" value="/home/george/develop/lib/log/"/>
+    <property name="imagej" value="/home/george/develop/lib/imagej"/>
+    <property name="dom4j" value="/home/george/develop/lib/dom4j"/>
+    <property name="j2ee" value="/home/george/develop/lib/j2ee"/>
+    <property name="pinyin" value="/home/george/develop/dist/kevin/kevin-pinyin.jar"/>
+    -->
+
+    <path id="classpath">
+        <!--
+        <fileset dir="${log}" includes="**/*.jar"/>
+        <fileset dir="${imagej}" includes="**/*.jar"/>
+        <fileset dir="${dom4j}" includes="**/*.jar"/>
+        <fileset dir="${j2ee}" includes="**/*.jar"/>
+        <pathelement location="${pinyin}"/>
+        -->
+        <pathelement location="${dir.out}"/>
+        <fileset dir="${dir.lib}" includes="**/*.jar"/>
+    </path>
+
+
+    <target name="default" depends="dist" description="default: distribute project"/>
+
+    <target name="clean" description="Remove all outputs">
+        <delete dir="${dir.out}"/>
+        <delete file="${file.jar}"/>
+        <mkdir dir="${dir.dist}"/>
+    </target>
+
+    <target name="compile" depends="clean" description="Generate outputs">
+        <mkdir dir="${dir.out}"/>
+        <javac srcdir="${dir.src}" destdir="${dir.out}" classpathref="classpath" debug="on" deprecation="on" fork="on" optimize="on"/>
+        <copy todir="${dir.out}" preservelastmodified="true">
+            <fileset dir="${dir.src}" excludes="**/*.java"/>
+        </copy>
+    </target>
+
+    <target name="dist" depends="compile" description="Distribute project (jars etc)">
+        <jar destfile="${file.jar}" filesonly="false">
+            <manifest>
+                <attribute name="Created-By" value="gaozou.org"/>
+                <attribute name="Manifest-Version" value="1.0"/>
+                <attribute name="Main-Class" value="org.gaozou.roy.quick.Quicker"/>
+            </manifest>
+            <fileset dir="${dir.out}"/>
+        </jar>
+    </target>
+
+</project>
